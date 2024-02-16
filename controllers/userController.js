@@ -29,5 +29,24 @@ module.exports = (usersCollection) => {
         res.status(500).send({ message: errorMessage });
       }
     },
-  };
+    loginUser: async (req, res) => {
+      const { username, password } = req.body;
+    
+      try {
+        const user = await usersCollection.findOne({ username });
+        if (user && await bcrypt.compare(password, user.password)) {
+          // Authentication successful
+          res.status(200).send({ message: "Login successful!" });
+        } else {
+          // Authentication failed
+          res.status(401).send({ message: "Invalid username or password" });
+        }
+      } catch (error) {
+        console.error("Error logging in user:", error);
+        res.status(500).send({ message: "An error occurred during the login process" });
+      }
+    }
+  }
 };
+
+

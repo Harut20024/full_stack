@@ -1,5 +1,5 @@
 const app = require("./app");
-const createUniqueIndex = require('./module/module');
+const createUniqueIndex = require("./module/module");
 const express = require("express");
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -26,7 +26,11 @@ async function run() {
     );
 
     const router = express.Router();
-    router.post("/register", userController.registerUser);
+    
+    router
+      .post("/register", userController.registerUser)
+      .post("/login", userController.loginUser);
+
     app.use("/api", router);
 
     console.log("Connected successfully to MongoDB");

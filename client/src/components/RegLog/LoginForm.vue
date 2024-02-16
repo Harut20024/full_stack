@@ -37,10 +37,35 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       console.log("Logging in with:", this.credentials);
-      this.credentials.password = "";
-      this.credentials.username = "";
+
+      // URL of your backend endpoint
+      const loginUrl = "http://localhost:3000/api/login";
+
+      try {
+        const response = await fetch(loginUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.credentials),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("Login successful!");
+          console.log("Success:", data);
+          // this.$router.push('/home');
+        } else {
+          // Login failed
+          alert(`Login failed: ${data.message}`);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      }
     },
   },
 };
