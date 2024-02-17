@@ -106,7 +106,7 @@ export default {
           );
         }
         alert("Registration successful!");
-        localStorage.setItem("userId", data._id);  
+        localStorage.setItem("userId", data._id);
         this.$router.push("/personal");
       } catch (error) {
         this.errorMessage = error.message || "Registration failed.";

@@ -19,6 +19,7 @@ export default {
     logout() {
       localStorage.removeItem("authToken");
       localStorage.removeItem("userId");
+      localStorage.removeItem("registered");
       this.$router.push("/login");
     },
     fetchUserImage() {

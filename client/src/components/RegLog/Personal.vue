@@ -1,9 +1,12 @@
 <template>
   <div class="form-container">
-    <h2>Personal Information</h2>
+    <h2><font-awesome-icon icon="user-alt" /> Personal Information</h2>
     <form @submit.prevent="onSubmit">
+      <!-- Profile Image -->
       <div class="form-group">
-        <label for="image">Profile Image:</label>
+        <label for="image"
+          ><font-awesome-icon icon="image" /> Profile Image:</label
+        >
         <input
           type="file"
           id="image"
@@ -11,8 +14,9 @@
           accept="image/*"
         />
       </div>
+      <!-- Name -->
       <div class="form-group">
-        <label for="realName">Name:</label>
+        <label for="realName"><font-awesome-icon icon="user" /> Name:</label>
         <input
           type="text"
           id="realName"
@@ -21,8 +25,9 @@
           required
         />
       </div>
+      <!-- Surname -->
       <div class="form-group">
-        <label for="surname">Surname:</label>
+        <label for="surname"><font-awesome-icon icon="user" /> Surname:</label>
         <input
           type="text"
           @input="validateAlphabetical($event)"
@@ -31,8 +36,9 @@
           required
         />
       </div>
+      <!-- Country -->
       <div class="form-group">
-        <label for="country">Country:</label>
+        <label for="country"><font-awesome-icon icon="globe" /> Country:</label>
         <input
           type="text"
           @input="validateAlphabetical($event)"
@@ -41,8 +47,11 @@
           required
         />
       </div>
+      <!-- Gender -->
       <div class="form-group">
-        <label for="gender">Gender:</label>
+        <label for="gender"
+          ><font-awesome-icon icon="venus-mars" /> Gender:</label
+        >
         <select id="gender" v-model="user.gender" required>
           <option value="" disabled>Select your gender</option>
           <option value="male">Male</option>
@@ -50,8 +59,9 @@
           <option value="other">Other</option>
         </select>
       </div>
+      <!-- Phone -->
       <div class="form-group">
-        <label for="phone">Phone:</label>
+        <label for="phone"><font-awesome-icon icon="phone" /> Phone:</label>
         <div class="phone-input">
           <select v-model="user.countryCode" required>
             <option value="" disabled>Select country code</option>
@@ -139,7 +149,6 @@
             <option value="+260">+260 (Zambia)</option>
             <option value="+263">+263 (Zimbabwe)</option>
           </select>
-
           <input
             type="tel"
             @input="validateNumeric($event)"
@@ -149,7 +158,10 @@
           />
         </div>
       </div>
-      <button type="submit" :disabled="isFormIncomplete">Save</button>
+      <!-- Submit Button -->
+      <button type="submit" :disabled="isFormIncomplete">
+        <font-awesome-icon icon="save" /> Save
+      </button>
     </form>
   </div>
 </template>
@@ -218,7 +230,7 @@ export default {
           `http://localhost:3000/api/update/${userId}`,
           {
             method: "PATCH",
-            body: formData, // Send as FormData
+            body: formData,
           }
         );
         if (!response.ok) {
