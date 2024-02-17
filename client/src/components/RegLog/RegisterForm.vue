@@ -1,22 +1,41 @@
 <template>
-  <div class="register-container">
+  <div class="form-container">
     <form @submit.prevent="onSubmit">
       <h2>Register</h2>
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="user.username" required />
-      </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" v-model="user.email" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="user.password" required />
-      </div>
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
+      <div class="form-group icon-input">
+        <font-awesome-icon icon="user" class="icon" />
         <input
+          placeholder="Username"
+          type="text"
+          id="username"
+          v-model="user.username"
+          required
+        />
+      </div>
+      <div class="form-group icon-input">
+        <font-awesome-icon icon="envelope" class="icon" />
+        <input
+          placeholder="Email"
+          type="email"
+          id="email"
+          v-model="user.email"
+          required
+        />
+      </div>
+      <div class="form-group icon-input">
+        <font-awesome-icon icon="lock" class="icon" />
+        <input
+          placeholder="Password"
+          type="password"
+          id="password"
+          v-model="user.password"
+          required
+        />
+      </div>
+      <div class="form-group icon-input">
+        <font-awesome-icon icon="unlock" class="icon" />
+        <input
+          placeholder="Confirm Password"
           type="password"
           id="confirmPassword"
           v-model="user.confirmPassword"
@@ -24,7 +43,11 @@
         />
       </div>
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-      <button type="submit">Register</button>
+      <p>
+        Already signed up?
+        <span @click="navigateToLogin" class="link">Sign in instead</span>
+      </p>
+      <button type="submit" :disabled="isFormIncomplete">Register</button>
     </form>
   </div>
 </template>
@@ -42,6 +65,16 @@ export default {
       },
       errorMessage: "",
     };
+  },
+  computed: {
+    isFormIncomplete() {
+      return (
+        !this.user.username ||
+        !this.user.email ||
+        !this.user.password ||
+        !(this.user.confirmPassword === this.user.password)
+      );
+    },
   },
   methods: {
     async onSubmit() {
@@ -72,62 +105,19 @@ export default {
             data.message || `HTTP error! status: ${response.status}`
           );
         }
-        console.log(data);
         alert("Registration successful!");
-        this.$router.push("/login");
+        localStorage.setItem("userId", data._id);  
+        this.$router.push("/personal");
       } catch (error) {
         this.errorMessage = error.message || "Registration failed.";
       }
     },
+    navigateToLogin() {
+      this.$router.push("/login");
+    },
   },
 };
 </script>
-
-<style scoped>
-.register-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #f3f3f3;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.error-message {
-  color: red;
-  margin-bottom: 20px;
-}
-h2 {
-  text-align: center;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  width: 95%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background-color: #5c5c5c;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: #4a4a4a;
-}
+<style scoped lang="scss">
+@import "./formStyles.scss";
 </style>

@@ -1,13 +1,15 @@
 const app = require("./app");
 const createUniqueIndex = require("./module/module");
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  "mongodb+srv://htarzyanh:GG9rpIFW8u3WxlaQ@cluster.ewqtdot.mongodb.net/?retryWrites=true&w=majority";
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const uri = process.env.DB_URI;
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// MongoDB session 
+// MongoDB session
 const store = new MongoDBStore({
   uri: uri,
   collection: "sessions",
@@ -20,10 +22,10 @@ store.on("error", function (error) {
 
 app.use(
   session({
-    secret: "your secret key", 
-    saveUninitialized: true, 
-    resave: false,  
-    store: store, 
+    secret: process.env.SECRET_KEY,
+    saveUninitialized: true,
+    resave: false,
+    store: store,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
@@ -47,14 +49,18 @@ async function run() {
 
     createUniqueIndex(usersCollection);
     const userController = require("./controllers/userController")(
-      usersCollection
+      usersCollection,
+      db  
     );
 
     const router = express.Router();
 
     router
       .post("/register", userController.registerUser)
-      .post("/login", userController.loginUser);
+      .post("/login", userController.loginUser)
+      .patch("/update/:id", upload.single("image"), userController.updateUser)
+      .get('/user/image/:id', userController.profilImage);
+
 
     app.use("/api", router);
 
@@ -66,9 +72,7 @@ async function run() {
 
 run().catch(console.dir);
 
-
-
-
+//starting server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
