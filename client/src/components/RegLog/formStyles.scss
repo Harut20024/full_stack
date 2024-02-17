@@ -1,14 +1,19 @@
+body {
+  background-color: #2f2e3f;
+}
 .form-container {
   max-width: 400px;
   margin: 50px auto;
   padding: 20px;
-  background-color: #f3f3f3;
+  color: white;
+  background-color: #252431;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
   text-align: center;
+  margin-bottom: 15px;
 }
 
 .form-group {
@@ -32,6 +37,7 @@ button {
   padding: 10px;
   border: none;
   background-color: #5c5c5c;
+  margin-top: 15px;
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -47,7 +53,7 @@ button:hover {
   margin-bottom: 20px;
 }
 .link {
-  color: #007bff;
+  color: #9A7FB0;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -66,19 +72,13 @@ button:hover {
     flex-grow: 1;
   }
 }
-.link {
-  color: #007bff;
-  cursor: pointer;
-}
+
 
 button {
-  background-color: #5c5c5c;
-  color: white;
-  // Other button styles
-
   &:disabled {
     background-color: #cccccc;
     color: #666666;
     cursor: not-allowed;
   }
 }
+
