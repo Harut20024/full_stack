@@ -42,16 +42,13 @@
       <h2>HTML Exercise</h2>
       <p>Test Yourself With This Exercise</p>
       <h3>Exercise:</h3>
-      <p>
-        Add a "tooltip" to the paragraph below with the text "About W3Schools".
-      </p>
+      <p>Write in the missing attribute value</p>
       <code>
-        &lt; <input id="answer" v-model="userAnswer" /> &gt;W3Schools is a web
-        developer's site.&lt;/p&gt;
+        &lt; <input id="answer" v-model="userAnswer" /> &gt;Here is your First
+        Paragraph&lt;/p&gt;
       </code>
 
-      <form @submit.prevent="submitQuiz">
-        <label for="answer">Fill in the missing attribute value:</label>
+      <form @submit.prevent="submitQuiz1">
         <button type="submit">Submit</button>
       </form>
 
@@ -60,7 +57,7 @@
         <p>
           Your Answer: <code>{{ userAnswer }}</code>
         </p>
-        <p v-if="isCorrectAnswer">Correct! Well done.</p>
+        <p v-if="isCorrectAnswer">Correct! Well done you get 5 coins!!!</p>
         <p v-else>
           That's not quite right. Remember to use the title attribute for
           tooltips.
@@ -85,6 +82,9 @@ export default {
       htmlImg,
       userAnswer: "",
       quizSubmitted: false,
+      ex1: "",
+      ex2: "",
+      ex3: "",
     };
   },
   created() {
@@ -92,10 +92,45 @@ export default {
   },
   computed: {
     isCorrectAnswer() {
-      return this.userAnswer.includes("p");
+      if (this.userAnswer.includes("p")) {
+        this.quizSubmitted = true;
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   methods: {
+    async addCoin(variantOfAnswer) {
+      const userId = this.userId;
+      const endpointUrl = `http://localhost:3000/api/user/${userId}/update`;
+
+      try {
+        const response = await fetch(endpointUrl, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            // Include authorization headers if needed
+          },
+          body: JSON.stringify({
+            coins: this.coin + 5,
+            [variantOfAnswer]: true,
+          }),
+        });
+
+        if (response.ok) {
+          // Update local state or trigger a re-fetch as necessary
+          console.log("Coins and exercise updated successfully");
+          // Optionally, refresh user data to reflect the update
+          this.fetchUserImage();
+        } else {
+          console.error("Failed to update coins and exercise status");
+        }
+      } catch (error) {
+        console.error("Error updating coins and exercise status:", error);
+      }
+    },
+
     logout() {
       localStorage.removeItem("authToken");
       localStorage.removeItem("userId");
@@ -122,13 +157,30 @@ export default {
           this.realName = userData.realName;
           this.surname = userData.surname;
           this.coin = userData.coin;
+          this.ex1 = userData.html1;
+          this.ex2 = userData.html2;
+          this.ex3 = userData.html3;
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
       }
     },
-    submitQuiz() {
-      this.quizSubmitted = true;
+    async submitQuiz1() {
+      if (!this.ex1) {
+        if (this.isCorrectAnswer) {
+          this.addCoin("html1");
+          this.ex1 = true;
+          this.quizSubmitted = true;
+          setTimeout(() => {
+            this.quizSubmitted = false;
+          }, 2000);
+        } else {
+          this.quizSubmitted = true;
+          setTimeout(() => {
+            this.quizSubmitted = false;
+          }, 2000);
+        }
+      }
     },
   },
 };
