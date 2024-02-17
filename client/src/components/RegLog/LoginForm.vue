@@ -65,7 +65,6 @@ export default {
         if (response.ok) {
           localStorage.setItem("authToken", data.token);
           localStorage.setItem("userId", data._id);
-          console.log(data._id);
           this.$router.push("/home");
         } else {
           alert(`Login failed: ${data.message}`);

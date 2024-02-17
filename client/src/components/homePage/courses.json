@@ -1,0 +1,26 @@
+[
+  {
+    "id": "html-css",
+    "alt": "HTML/CSS",
+    "h2": "HTML/CSS",
+    "p": "Markup and styling languages for web design and layout."
+  },
+  {
+    "id": "sql",
+    "alt": "SQL",
+    "h2": "SQL",
+    "p": "Standard language for managing and manipulating databases."
+  },
+  {
+    "id": "mongodb",
+    "alt": "MongoDB",
+    "h2": "MongoDB",
+    "p": "NoSQL database for modern, scalable applications."
+  },
+  {
+    "id": "javascript",
+    "alt": "JavaScript",
+    "h2": "JavaScript",
+    "p": "Dynamic programming language for web development."
+  }
+]

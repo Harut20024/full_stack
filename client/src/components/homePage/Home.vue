@@ -9,13 +9,14 @@
           class="user-image"
         />
         <span class="user-name">{{ realName }} {{ surname }}</span>
-        <font-awesome-icon icon="coins" class="coin" />
         <span class="coin">{{ coin }}</span>
-        <button @click="logout">Logout</button>
+        <font-awesome-icon v-if="coin" icon="coins" class="coin" />
+        <button v-if="coin" @click="logout">Logout</button>
+        <button v-else @click="login">Login</button>
       </div>
     </div>
     <main>
-      <h1>Welcome {{ realName }} {{ surname }}</h1>
+      <h1>Welcome</h1>
       <div id="main">
         <p>
           In this website, users are invited to engage in a series of
@@ -47,39 +48,30 @@
         </p>
         <br /><br />
       </div>
+      <h1>Courses</h1>
       <div class="boxes">
-        <div class="box">
-          <img :src="htmlAndCssImage" alt="HTML/CSS" />
-          <h2>HTML/CSS</h2>
-          <p>Markup and styling languages for web design and layout.</p>
-        </div>
-        <div class="box">
-          <img :src="sqlImage" alt="SQL" />
-          <h2>SQL</h2>
-          <p>Standard language for managing and manipulating databases.</p>
-        </div>
-        <div class="box">
-          <img :src="mongoImg" alt="MongoDB" />
-          <h2>MongoDB</h2>
-          <p>NoSQL database for modern, scalable applications.</p>
-        </div>
-        <div class="box">
-          <img :src="jsImage" alt="JavaScript" />
-          <h2>JavaScript</h2>
-          <p>Dynamic programming language for web development.</p>
+        <div
+          class="box"
+          v-for="course in courses"
+          :key="course.id"
+          @click="visitToTour(course.h2)"
+        >
+          <img :src="course.src" :alt="course.alt" />
+          <h2>{{ course.h2 }}</h2>
+          <p>{{ course.p }}</p>
         </div>
       </div>
     </main>
-
-    <footer>© 2024 Your Website. All Rights Reserved.</footer>
   </div>
+  <footer>© 2024 Your Website. All Rights Reserved.</footer>
 </template>
 
 <script>
-import js from "../../assets/js.png";
-import htmlAndJs from "../../assets/html_css.png";
-import sql from "../../assets/sql.png";
-import mongo from "../../assets/mongo.png";
+import htmlAndCssImage from "@/assets/html_css.png";
+import sqlImage from "@/assets/sql.png";
+import mongoImg from "@/assets/mongo.png";
+import jsImage from "@/assets/js.png";
+import coursesData from "./courses.json";
 
 export default {
   name: "Home",
@@ -95,18 +87,39 @@ export default {
       realName: "",
       surname: "",
       coin: "",
-      jsImage: js,
-      htmlAndCssImage: htmlAndJs,
-      sqlImage: sql,
-      mongoImg: mongo,
+      courses: [],
     };
   },
-
+  created() {
+    this.initializeCourses();
+    this.fetchUserImage();
+  },
   methods: {
+    visitToTour(courseTitle) {
+      if(courseTitle === "HTML/CSS") courseTitle = "HTML"
+      if(courseTitle === "JavaScript") courseTitle = "JS"
+      this.$router.push(`/course/${courseTitle}`);
+    },
+    initializeCourses() {
+      const images = {
+        "html-css": htmlAndCssImage,
+        sql: sqlImage,
+        mongodb: mongoImg,
+        javascript: jsImage,
+      };
+
+      this.courses = coursesData.map((course) => ({
+        ...course,
+        src: images[course.id],
+      }));
+    },
     logout() {
       localStorage.removeItem("authToken");
       localStorage.removeItem("userId");
       localStorage.removeItem("registered");
+      this.$router.push("/login");
+    },
+    login() {
       this.$router.push("/login");
     },
     async fetchUserImage() {
@@ -133,13 +146,8 @@ export default {
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
-      } else {
-        console.log("User ID not found");
       }
     },
-  },
-  created() {
-    this.fetchUserImage();
   },
 };
 </script>
