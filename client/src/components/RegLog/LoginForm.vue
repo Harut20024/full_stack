@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      const loginUrl = "http://localhost:3000/api/login";
+      const loginUrl = "http://localhost:3000/api/user/login";
 
       try {
         const response = await fetch(loginUrl, {
@@ -63,7 +63,6 @@ export default {
         const data = await response.json();
 
         if (response.ok) {
-          alert("Login successful!");
           localStorage.setItem("authToken", data.token);
           localStorage.setItem("userId", data._id);
           console.log(data._id);

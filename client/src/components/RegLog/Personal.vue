@@ -227,7 +227,7 @@ export default {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/api/update/${userId}`,
+          `http://localhost:3000/api/user/update/${userId}`,
           {
             method: "PATCH",
             body: formData,
@@ -239,7 +239,6 @@ export default {
         }
         const data = await response.json();
         console.log("User details updated successfully:", data);
-        alert("User details updated successfully!");
         localStorage.removeItem("userId");
         this.$router.push("/login");
       } catch (error) {

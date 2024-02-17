@@ -84,7 +84,7 @@ export default {
         return;
       }
 
-      const url = "http://localhost:3000/api/register";
+      const url = "http://localhost:3000/api/user/register";
       const requestData = {
         method: "POST",
         headers: {
@@ -105,7 +105,6 @@ export default {
             data.message || `HTTP error! status: ${response.status}`
           );
         }
-        alert("Registration successful!");
         localStorage.setItem("userId", data._id);
         this.$router.push("/personal");
       } catch (error) {

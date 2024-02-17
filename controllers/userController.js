@@ -51,7 +51,11 @@ module.exports = (usersCollection, db) => {
           req.session.user = user;
           res
             .status(200)
-            .send({ message: "Login successful!", token: username, _id: user._id.toString() });
+            .send({
+              message: "Login successful!",
+              token: username,
+              _id: user._id.toString(),
+            });
         } else {
           res.status(401).send({ message: "Invalid username or password" });
         }
@@ -119,6 +123,29 @@ module.exports = (usersCollection, db) => {
       } catch (error) {
         console.error("Error serving image:", error);
         res.status(500).send({ message: "Failed to serve image." });
+      }
+    },
+    getUserDetails: async (req, res) => {
+      const { id } = req.params;
+      try {
+        const user = await usersCollection.findOne(
+          { _id: new ObjectId(id) },
+          {
+            projection: {
+              password: 0,
+              image: 0,
+            },
+          }
+        );
+
+        if (!user) {
+          return res.status(404).send({ message: "User not found." });
+        }
+
+        res.status(200).json(user);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        res.status(500).send({ message: "Failed to fetch user details." });
       }
     },
   };

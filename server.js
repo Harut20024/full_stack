@@ -50,19 +50,12 @@ async function run() {
     createUniqueIndex(usersCollection);
     const userController = require("./controllers/userController")(
       usersCollection,
-      db  
+      db
     );
 
-    const router = express.Router();
+    const loginRoutes = require("./routes/loginRoutes")(userController);
 
-    router
-      .post("/register", userController.registerUser)
-      .post("/login", userController.loginUser)
-      .patch("/update/:id", upload.single("image"), userController.updateUser)
-      .get('/user/image/:id', userController.profilImage);
-
-
-    app.use("/api", router);
+    app.use("/api", loginRoutes);
 
     console.log("Connected successfully to MongoDB");
   } catch (error) {
