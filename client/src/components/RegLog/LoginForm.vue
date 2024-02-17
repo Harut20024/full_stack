@@ -57,7 +57,7 @@ export default {
         if (response.ok) {
           alert("Login successful!");
           console.log("Success:", data);
-          // this.$router.push('/home');
+          this.$router.push('/home');
         } else {
           // Login failed
           alert(`Login failed: ${data.message}`);
