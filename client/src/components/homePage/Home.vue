@@ -1,8 +1,13 @@
 <template>
   <div class="container">
     <div class="top-bar">
+      <div id="icon">
+        <img :src="iconImg" alt="icon" />
+        <h2>Easy Learn</h2>
+      </div>
       <div class="user-info">
         <img
+          @click="profil"
           v-if="imageUrl"
           :src="imageUrl"
           alt="User Profile Image"
@@ -16,8 +21,9 @@
       </div>
     </div>
     <main>
-      <h1>Welcome</h1>
       <div id="main">
+        <h1>Welcome</h1>
+        <br />
         <p>
           In this website, users are invited to engage in a series of
           challenges, each accompanied by its own set of exercises designed to
@@ -48,6 +54,33 @@
         </p>
         <br /><br />
       </div>
+      <div v-if="leaderboard.length > 1">
+        <div class="rank-container">
+          <h1 class="rank-title">Leaderboard</h1>
+          <p class="rank-description">
+            Below are our top performers, showcasing users who have excelled in
+            completing exercises and accumulating rewards. Your dedication and
+            skill can earn you a spot among them, or perhaps even at the very
+            top. Join the challenge and climb the ranks!
+          </p>
+        </div>
+        <div class="leaderboard-container">
+          <ul>
+            <li v-for="(user, index) in leaderboard" :key="user._id">
+              <img
+                :src="user.imageUrl"
+                alt="Profile Image"
+                class="leaderboard-image"
+              />
+              <span
+                >{{ index + 1 }}. {{ user.username }} -
+                {{ user.coin }} coins</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <h1>Courses</h1>
       <div class="boxes">
         <div
@@ -72,6 +105,7 @@ import sqlImage from "@/assets/sql.png";
 import mongoImg from "@/assets/mongo.png";
 import jsImage from "@/assets/js.png";
 import coursesData from "./courses.json";
+import iconImg from "@/assets/icon.png";
 
 export default {
   name: "Home",
@@ -88,16 +122,22 @@ export default {
       surname: "",
       coin: "",
       courses: [],
+      leaderboard: [],
+      iconImg,
     };
   },
   created() {
+    this.fetchLeaderboard();
     this.initializeCourses();
     this.fetchUserImage();
   },
   methods: {
+    profil() {
+      this.$router.push("/person");
+    },
     visitToTour(courseTitle) {
-      if(courseTitle === "HTML/CSS") courseTitle = "HTML"
-      if(courseTitle === "JavaScript") courseTitle = "JS"
+      if (courseTitle === "HTML/CSS") courseTitle = "HTML";
+      if (courseTitle === "JavaScript") courseTitle = "JS";
       this.$router.push(`/course/${courseTitle}`);
     },
     initializeCourses() {
@@ -121,6 +161,21 @@ export default {
     },
     login() {
       this.$router.push("/login");
+    },
+
+    async fetchLeaderboard() {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/users/leaderboard"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch leaderboard data");
+        }
+        const data = await response.json();
+        this.leaderboard = data;
+      } catch (error) {
+        console.error("Error fetching leaderboard data:", error);
+      }
     },
     async fetchUserImage() {
       const userId = localStorage.getItem("userId");

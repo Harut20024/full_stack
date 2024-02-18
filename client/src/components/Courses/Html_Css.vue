@@ -1,19 +1,24 @@
 <template>
   <div class="top-bar">
-    <div class="user-info">
-      <img
-        v-if="imageUrl"
-        :src="imageUrl"
-        alt="User Profile Image"
-        class="user-image"
-      />
-      <span class="user-name">{{ realName }} {{ surname }}</span>
-      <span class="coin">{{ coin }}</span>
-      <font-awesome-icon v-if="coin" icon="coins" class="coin" />
-      <button v-if="coin" @click="logout">Logout</button>
-      <button v-else @click="login">Login</button>
+      <div id="icon" @click="homePage">
+        <img :src="iconImg" alt="icon" />
+        <h2>Easy Learn</h2>
+      </div>
+      <div class="user-info">
+        <img
+        @click="profil"
+          v-if="imageUrl"
+          :src="imageUrl"
+          alt="User Profile Image"
+          class="user-image"
+        />
+        <span class="user-name">{{ realName }} {{ surname }}</span>
+        <span class="coin">{{ coin }}</span>
+        <font-awesome-icon v-if="coin" icon="coins" class="coin" />
+        <button v-if="coin" @click="logout">Logout</button>
+        <button v-else @click="login">Login</button>
+      </div>
     </div>
-  </div>
   <div class="content">
     <div id="mainer">
       <h1>HTML/CSS</h1>
@@ -223,11 +228,13 @@
 </template>
 
 <script>
+import iconImg from "@/assets/icon.png";
 import htmlImg from "../../assets/html_css.png";
 export default {
   name: "HtmlAndCss",
   data() {
     return {
+      iconImg,
       imageUrl: "",
       realName: "",
       surname: "",
@@ -261,6 +268,9 @@ export default {
     },
   },
   methods: {
+    homePage(){
+      this.$router.push("/home");
+    },
     async addCoin(exerciseKey, amount) {
       const userId = localStorage.getItem("userId");
       if (!userId) {

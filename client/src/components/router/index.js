@@ -4,10 +4,12 @@ import LoginForm from "../RegLog/LoginForm.vue";
 import NotFound from "../NotFound/NotFound.vue";
 import Home from "../homePage/Home.vue";
 import PersonalForm from "../RegLog/Personal.vue";
+import PersonHomePage from "../Profil/Profile.vue"
 import SqlForm from "../Courses/Sql.vue";
 import HtmlForm from "../Courses/Html_Css.vue";
 import JsForm from "../Courses/Js.vue";
 import MongoForm from "../Courses/Mongo"
+
 const routes = [
   { path: "/register", component: RegisterForm, meta: { requiresGuest: true } },
   { path: "/login", component: LoginForm, meta: { requiresGuest: true } },
@@ -16,6 +18,7 @@ const routes = [
   { path: "/course/HTML", component: HtmlForm, meta: { requiresAuth: true } },
   { path: "/course/JS", component: JsForm, meta: { requiresAuth: true } },
   { path: "/course/MongoDB", component: MongoForm, meta: { requiresAuth: true } },
+  { path: "/person", component: PersonHomePage, meta: { requiresAuth: true } },
   { path: "/home", component: Home },
   { path: "/", redirect: "/home" },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },

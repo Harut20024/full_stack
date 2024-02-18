@@ -25,6 +25,19 @@ module.exports = (usersCollection, db) => {
           email,
           password: hashedPassword,
           createdDate: formattedDate,
+          coin: 10,
+          html1: false,
+          html2: false,
+          html3: false,
+          js1: false,
+          js2: false,
+          js3: false,
+          mongo1: false,
+          mongo2: false,
+          mongo3: false,
+          sql1: false,
+          sql2: false,
+          sql3: false,
         });
 
         res.status(201).send({
@@ -49,13 +62,11 @@ module.exports = (usersCollection, db) => {
         if (user && (await bcrypt.compare(password, user.password))) {
           req.session.isLoggedIn = true;
           req.session.user = user;
-          res
-            .status(200)
-            .send({
-              message: "Login successful!",
-              token: username,
-              _id: user._id.toString(),
-            });
+          res.status(200).send({
+            message: "Login successful!",
+            token: username,
+            _id: user._id.toString(),
+          });
         } else {
           res.status(401).send({ message: "Invalid username or password" });
         }
@@ -105,6 +116,69 @@ module.exports = (usersCollection, db) => {
       } catch (error) {
         console.error("Error updating user:", error);
         res.status(500).send({ message: "Failed to update user." });
+      }
+    },
+    addCoin: async (req, res) => {
+      const { id } = req.params;
+      const { coinsToAdd, exerciseCompleted } = req.body;
+
+      console.log(coinsToAdd, exerciseCompleted );
+      const numericCoinsToAdd = Number(coinsToAdd);
+      if (isNaN(numericCoinsToAdd)) {
+        return res
+          .status(400)
+          .send({ message: "Invalid coins to add. Must be a numeric value." });
+      }
+
+      let updateData = { $inc: { coin: numericCoinsToAdd } };
+
+      // Ensure exerciseCompleted is correctly handled
+      if (exerciseCompleted) {
+        updateData["$set"] = { [exerciseCompleted]: true };
+      }
+
+      try {
+        const updateResult = await usersCollection.updateOne(
+          { _id: new ObjectId(id) },
+          updateData
+        );
+
+        if (updateResult.matchedCount === 0) {
+          return res
+            .status(404)
+            .send({ message: "User not found with provided ID." });
+        }
+
+        if (updateResult.modifiedCount === 0) {
+          // This means the document was found but not modified, possibly because it was already in the desired state.
+          console.log(
+            "No changes made to the document, possibly already in the desired state."
+          );
+        }
+
+        return res
+          .status(200)
+          .send({ message: "Coins added and user updated successfully!" });
+      } catch (error) {
+        console.error("Error updating user:", error);
+        return res.status(500).send({ message: "Failed to update user." });
+      }
+    },
+    leaderboard:  async (req, res) => {
+      try {
+        const leaderboardData = await usersCollection
+          .find({}, { projection: { password: 0 } })
+          .sort({ coin: -1 })
+          .toArray();
+    
+        leaderboardData.forEach(user => {
+          user.imageUrl = `http://localhost:3000/api/user/image/${user._id}`;
+        });
+    
+        res.status(200).json(leaderboardData);
+      } catch (error) {
+        console.error("Error retrieving leaderboard:", error);
+        res.status(500).send({ message: "Failed to retrieve leaderboard data." });
       }
     },
     profilImage: async (req, res) => {

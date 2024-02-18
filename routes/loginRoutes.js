@@ -15,8 +15,10 @@ module.exports = (userController) => {
       upload.single("image"),
       userController.updateUser
     )
+    .patch("/user/addcoin/:id", userController.addCoin)
     .get("/user/image/:id", userController.profilImage)
     .get("/user/details/:id", userController.getUserDetails);
+  router.get("/users/leaderboard", userController.leaderboard);
 
   return router;
 };
