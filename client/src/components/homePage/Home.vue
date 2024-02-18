@@ -26,7 +26,6 @@
     <main>
       <div id="main">
         <br />
-        <h2>Welcome to Easy Learn</h2>
         <br />
         <p>
           In this website, users are invited to engage in a series of
@@ -68,9 +67,14 @@
             top. Join the challenge and climb the ranks!
           </p>
         </div>
+
         <div class="leaderboard-container">
           <ul>
-            <li v-for="(user, index) in leaderboard" :key="user._id">
+            <li
+              v-for="(user, index) in leaderboard"
+              :key="user._id"
+              :class="getClassByIndex(index)"
+            >
               <img
                 :src="user.imageUrl"
                 alt="Profile Image"
@@ -172,6 +176,16 @@ export default {
     this.fetchUserImage();
   },
   methods: {
+    getClassByIndex(index) {
+      if (index === 0) {
+        return "first-place";
+      } else if (index === 1) {
+        return "second-place";
+      } else if (index === 2) {
+        return "third-place";
+      }
+      return "";
+    },
     profil() {
       this.$router.push("/person");
     },
