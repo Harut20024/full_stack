@@ -294,6 +294,9 @@ export default {
     },
   },
   methods: {
+    profil() {
+      this.$router.push("/person");
+    },
     homePage(){
       this.$router.push("/home");
     },
