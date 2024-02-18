@@ -20,9 +20,13 @@
         <button v-else @click="login">Login</button>
       </div>
     </div>
+    <div class="welcome-container">
+      <h1>Welcome</h1>
+    </div>
     <main>
       <div id="main">
-        <h1>Welcome</h1>
+        <br />
+        <h2>Welcome to Easy Learn</h2>
         <br />
         <p>
           In this website, users are invited to engage in a series of
@@ -80,9 +84,17 @@
           </ul>
         </div>
       </div>
+      <div v-else>
+        <h2>Loading leaderboard...</h2>
+      </div>
 
-      <h1>Courses</h1>
       <div class="boxes">
+        <h1>Courses</h1>
+        <p>
+          Explore our diverse selection of courses and choose the path that
+          excites you the most. Embark on your learning journey and expand your
+          horizons with each step forward.
+        </p>
         <div
           class="box"
           v-for="course in courses"
@@ -96,7 +108,34 @@
       </div>
     </main>
   </div>
-  <footer>© 2024 Your Website. All Rights Reserved.</footer>
+  <footer class="footer">
+    <div class="footer-content">
+      <h3>Connect with us</h3>
+      <ul class="social-links">
+        <li>
+          <a href="https://instagram.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'instagram']" /> Instagram</a
+          >
+        </li>
+        <li>
+          <a href="https://github.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'github']" /> GitHub</a
+          >
+        </li>
+        <li>
+          <a href="https://linkedin.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'linkedin']" /> LinkedIn</a
+          >
+        </li>
+        <li>
+          <a href="https://facebook.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a
+          >
+        </li>
+      </ul>
+    </div>
+    <p>© 2024 Your Website. All Rights Reserved.</p>
+  </footer>
 </template>
 
 <script>
@@ -106,11 +145,12 @@ import mongoImg from "@/assets/mongo.png";
 import jsImage from "@/assets/js.png";
 import coursesData from "./courses.json";
 import iconImg from "@/assets/icon.png";
-
+import fallImg from "@/assets/sky.webp";
 export default {
   name: "Home",
   data() {
     return {
+      fallImg,
       imageUrl: "",
       username: "",
       email: "",

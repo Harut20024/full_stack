@@ -60,6 +60,34 @@
       <p>User data is loading or not available...</p>
     </div>
   </div>
+  <footer class="footer">
+    <div class="footer-content">
+      <h3>Connect with us</h3>
+      <ul class="social-links">
+        <li>
+          <a href="https://instagram.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'instagram']" /> Instagram</a
+          >
+        </li>
+        <li>
+          <a href="https://github.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'github']" /> GitHub</a
+          >
+        </li>
+        <li>
+          <a href="https://linkedin.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'linkedin']" /> LinkedIn</a
+          >
+        </li>
+        <li>
+          <a href="https://facebook.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a
+          >
+        </li>
+      </ul>
+    </div>
+    <p>© 2024 Your Website. All Rights Reserved.</p>
+  </footer>
 </template>
 
 <script>
