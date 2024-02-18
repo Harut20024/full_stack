@@ -162,7 +162,7 @@
         <h4>Exercise 1</h4>
         <p>Write in the missing attribute value</p>
         <code
-          >&lt; <input id="answer1" v-model="userAnswer1" /> &gt;Here is your
+          >&lt; <input class="input" id="answer1" v-model="userAnswer1" /> &gt;Here is your
           First Paragraph&lt;/p&gt;</code
         >
         <form @submit.prevent="submitQuiz(1)">
@@ -186,7 +186,7 @@
           paragraph to "blue".
         </p>
         <code
-          >&lt; <input id="answer2" v-model="userAnswer2" /> =
+          >&lt; <input class="input" id="answer2" v-model="userAnswer2" /> =
           "color:blue"&gt;This is a paragraph.&lt;/p&gt;</code
         >
         <form @submit.prevent="submitQuiz(2)">
@@ -208,7 +208,7 @@
         </p>
         <code
           >&lt; img src="scream.png"
-          <input id="answer3" v-model="userAnswer3" /> = 250 &gt;</code
+          <input class="input" id="answer3" v-model="userAnswer3" /> = 250 &gt;</code
         >
         <form @submit.prevent="submitQuiz(3)">
           <button type="submit">Submit</button>
@@ -395,9 +395,14 @@ export default {
           console.error("Invalid exercise number");
           return;
       }
-
+      
       if (isCorrect) {
         await this.addCoin(index, 5);
+      }
+      else{
+        setTimeout(() => {
+        this.quizSubmitted1 =this.quizSubmitted3=this.quizSubmitted2 = false;
+      }, 1000);
       }
     },
   },
