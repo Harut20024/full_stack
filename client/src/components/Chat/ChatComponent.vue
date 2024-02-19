@@ -20,8 +20,14 @@
     </div>
   </div>
   <div class="chat-container">
+    <h1>Community chat</h1>
     <ul class="messages">
-      <li v-for="msg in messages" :key="msg.id" class="message">
+      <li
+        v-for="msg in messages"
+        :key="msg._id"
+        class="message"
+        :class="getClassById(msg.id)"
+      >
         <div class="message-header">
           <img :src="msg.imageUrl" alt="Profile Image" class="profile-image" />
           <span class="username">{{ msg.username }}</span>
@@ -38,6 +44,34 @@
       <button @click="sendMessage">Send</button>
     </div>
   </div>
+  <footer class="footer">
+    <div class="footer-content">
+      <h3>Connect with us</h3>
+      <ul class="social-links">
+        <li>
+          <a href="https://instagram.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'instagram']" /> Instagram</a
+          >
+        </li>
+        <li>
+          <a href="https://github.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'github']" /> GitHub</a
+          >
+        </li>
+        <li>
+          <a href="https://linkedin.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'linkedin']" /> LinkedIn</a
+          >
+        </li>
+        <li>
+          <a href="https://facebook.com" target="_blank"
+            ><font-awesome-icon :icon="['fab', 'facebook']" /> Facebook</a
+          >
+        </li>
+      </ul>
+    </div>
+    <p>© 2024 Your Website. All Rights Reserved.</p>
+  </footer>
 </template>
 
 <script>
@@ -54,9 +88,11 @@ export default {
       iconImg,
       newMessage: "",
       messages: [],
+      userId: "",
     };
   },
   created() {
+    this.userId = localStorage.getItem("userId");
     this.fetchMessage();
     this.fetchUser();
     socket.on("db change", (change) => {
@@ -65,7 +101,11 @@ export default {
     });
   },
   methods: {
-    homePage(){
+    getClassById(id) {
+      return this.userId === id ? "self" : "other";
+    },
+
+    homePage() {
       this.$router.push("/home");
     },
     logout() {
@@ -78,18 +118,17 @@ export default {
       this.$router.push("/person");
     },
     async fetchUser() {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
+      if (this.userId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/user/details/${userId}`
+            `http://localhost:3000/api/user/details/${this.userId}`
           );
           if (!response.ok) {
             throw new Error("Failed to fetch user details");
           }
           const userData = await response.json();
           this.user = userData;
-          this.imageUrl = `http://localhost:3000/api/user/image/${userId}`;
+          this.imageUrl = `http://localhost:3000/api/user/image/${this.userId}`;
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
@@ -110,7 +149,6 @@ export default {
       }
     },
     async sendMessage() {
-      const userId = localStorage.getItem("userId");
       const userName = localStorage.getItem("authToken");
       if (this.newMessage.trim()) {
         try {
@@ -122,7 +160,7 @@ export default {
             body: JSON.stringify({
               message: this.newMessage,
               username: userName,
-              id: userId,
+              id: this.userId,
             }),
           });
           if (!response.ok) throw new Error("Failed to send message");

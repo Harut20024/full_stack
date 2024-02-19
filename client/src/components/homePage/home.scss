@@ -274,8 +274,50 @@ h2 {
     font-size: 0.9em;
   }
 }
+.chat-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 25px;
+  background-color: #8b328c;
+  color: #d7bfe1;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 
-/* Responsive adjustments */
+  &:hover {
+    background-color: #6f226a;
+  }
+
+  svg {
+    font-size: 24px;
+  }
+  .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 0%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap; // Prevent text wrapping
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
 @media (max-width: 768px) {
   .rank-container {
     padding: 1rem;

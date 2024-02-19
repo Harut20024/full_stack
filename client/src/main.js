@@ -15,6 +15,7 @@ import {
   faVenusMars,
   faUserAlt,
   faCoins,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faInstagram,
@@ -24,6 +25,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 library.add(
+  faComment,
   faUser,
   faLock,
   faEnvelope,

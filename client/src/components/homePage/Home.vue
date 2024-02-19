@@ -20,6 +20,15 @@
         <button v-else @click="login">Login</button>
       </div>
     </div>
+    <div
+      class="chat-icon"
+      @click="goToChat"
+      @mouseover="showTooltip = true"
+      @mouseleave="showTooltip = false"
+    >
+      <font-awesome-icon icon="comment" />
+      <div v-if="showTooltip" class="tooltip">Click to chat with us!</div>
+    </div>
     <div class="welcome-container">
       <h1>Welcome</h1>
     </div>
@@ -166,8 +175,9 @@ export default {
       surname: "",
       coin: "",
       courses: [],
-      leaderboard: [],
       iconImg,
+      leaderboard: [],
+      showTooltip: false,
     };
   },
   created() {
@@ -176,6 +186,9 @@ export default {
     this.fetchUserImage();
   },
   methods: {
+    goToChat() {
+      this.$router.push("/chat");
+    },
     getClassByIndex(index) {
       if (index === 0) {
         return "first-place";
