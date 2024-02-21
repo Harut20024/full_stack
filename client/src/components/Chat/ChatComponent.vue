@@ -95,11 +95,15 @@ export default {
     this.userId = localStorage.getItem("userId");
     this.fetchMessage();
     this.fetchUser();
-    socket.on("db change", (change) => {
-      console.log("Database change detected", change);
-      this.fetchMessage();
+    socket.on("chat message", (newMessage) => {
+      const updatedMessage = {
+        ...newMessage,
+        imageUrl: `http://localhost:3000/api/user/image/${newMessage.id}`,
+      };
+      this.messages.push(updatedMessage);
     });
   },
+
   methods: {
     getClassById(id) {
       return this.userId === id ? "self" : "other";
@@ -136,18 +140,23 @@ export default {
     },
     async fetchMessage() {
       try {
-        const response = await fetch(
-          "http://localhost:3000/api/users/getMessages"
-        );
+        const response = await fetch("http://localhost:3000/api/messages");
         if (!response.ok) {
           throw new Error("Failed to fetch Messages data");
         }
-        const data = await response.json();
+        let data = await response.json();
+
+        data = data.map((message) => ({
+          ...message,
+          imageUrl: `http://localhost:3000/api/user/image/${message.id}`,
+        }));
+
         this.messages = data;
       } catch (error) {
-        console.error("Error fetching leaderboard data:", error);
+        console.error("Error fetching messages:", error);
       }
     },
+
     async sendMessage() {
       const userName = localStorage.getItem("authToken");
       if (this.newMessage.trim()) {

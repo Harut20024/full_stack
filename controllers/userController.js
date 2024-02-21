@@ -3,7 +3,7 @@ const saltRounds = 10;
 const { ObjectId } = require("mongodb");
 const { Binary } = require("mongodb");
 
-module.exports = (usersCollection, db) => {
+module.exports = (usersCollection, db, io) => {
   return {
     registerUser: async (req, res) => {
       const { username, email, password } = req.body;
@@ -41,7 +41,7 @@ module.exports = (usersCollection, db) => {
         });
 
         res.status(201).send({
-          _id: result.insertedId, // This is how you get the _id
+          _id: result.insertedId,
           message: "User registered successfully!",
         });
       } catch (error) {
@@ -122,7 +122,7 @@ module.exports = (usersCollection, db) => {
       const { id } = req.params;
       const { coinsToAdd, exerciseCompleted } = req.body;
 
-      console.log(coinsToAdd, exerciseCompleted );
+      console.log(coinsToAdd, exerciseCompleted);
       const numericCoinsToAdd = Number(coinsToAdd);
       if (isNaN(numericCoinsToAdd)) {
         return res
@@ -164,21 +164,23 @@ module.exports = (usersCollection, db) => {
         return res.status(500).send({ message: "Failed to update user." });
       }
     },
-    leaderboard:  async (req, res) => {
+    leaderboard: async (req, res) => {
       try {
         const leaderboardData = await usersCollection
           .find({}, { projection: { password: 0 } })
           .sort({ coin: -1 })
           .toArray();
-    
-        leaderboardData.forEach(user => {
+
+        leaderboardData.forEach((user) => {
           user.imageUrl = `http://localhost:3000/api/user/image/${user._id}`;
         });
-    
+
         res.status(200).json(leaderboardData);
       } catch (error) {
         console.error("Error retrieving leaderboard:", error);
-        res.status(500).send({ message: "Failed to retrieve leaderboard data." });
+        res
+          .status(500)
+          .send({ message: "Failed to retrieve leaderboard data." });
       }
     },
     profilImage: async (req, res) => {
@@ -197,6 +199,35 @@ module.exports = (usersCollection, db) => {
       } catch (error) {
         console.error("Error serving image:", error);
         res.status(500).send({ message: "Failed to serve image." });
+      }
+    },
+    postMessage: async (req, res) => {
+      try {
+        const { message, username, id } = req.body;
+        const newMessage = {
+          message,
+          username,
+          id,
+          createdAt: new Date(),
+        };
+        const result = await db.collection("messages").insertOne(newMessage);
+        io.emit("chat message", newMessage);
+        res.status(201).json({
+          message: "Message sent successfully",
+          id: result.insertedId,
+        });
+      } catch (error) {
+        console.error("Error posting message:", error);
+        res.status(500).send({ message: "Failed to post message" });
+      }
+    },
+    getAllMessages: async (req, res) => {
+      try {
+        const messages = await db.collection("messages").find({}).toArray();
+        res.status(200).json(messages);
+      } catch (error) {
+        console.error("Error getting messages:", error);
+        res.status(500).send({ message: "Failed to get messages" });
       }
     },
     getUserDetails: async (req, res) => {
